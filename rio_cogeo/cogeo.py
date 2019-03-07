@@ -10,7 +10,6 @@ import rasterio
 from rasterio.io import MemoryFile
 from rasterio.vrt import WarpedVRT
 from rasterio.enums import Resampling
-from rasterio.shutil import copy
 
 from rio_cogeo.errors import LossyCompression
 from rio_cogeo.utils import get_maximum_overview_level, has_alpha_band, has_mask_band
@@ -146,4 +145,5 @@ def cog_translate(
                             click.echo(
                                 "Writing output to: {}".format(dst_path), err=True
                             )
-                        copy(mem, dst_path, copy_src_overviews=True, **dst_kwargs)
+                        write_to_dst(mem, memfile, dst_path, dst_kwargs)
+
