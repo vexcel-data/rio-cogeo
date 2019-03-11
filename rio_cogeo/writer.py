@@ -1,5 +1,6 @@
 import os
 import boto3
+from rasterio.env import getenv
 from rasterio.shutil import copy
 
 
@@ -11,9 +12,6 @@ SCHEMES = {
     }
 }
 
-AWS_ACCESS_KEY_ID: 'str' = os.environ['AWS_ACCESS_KEY_ID']
-AWS_SECRET_ACCESS_KEY: 'str' = os.environ['AWS_SECRET_ACCESS_KEY']
-
 
 def write_to_dst(mem, memfile, dst_path, dst_kwargs):
     for k, v in SCHEMES['s3'].items():
@@ -22,8 +20,11 @@ def write_to_dst(mem, memfile, dst_path, dst_kwargs):
             bucket_name = dst_path.split('/')[v]
 
             session = boto3.Session(
-                aws_access_key_id=AWS_ACCESS_KEY_ID,
-                aws_secret_access_key=AWS_SECRET_ACCESS_KEY
+                aws_access_key_id=getenv()['AWS_ACCESS_KEY_ID'],
+                aws_secret_access_key=getenv()['AWS_SECRET_ACCESS_KEY'],
+                aws_session_token=getenv().get('AWS_SESSION_TOKEN'),
+                region_name=getenv().get('AWS_REGION_NAME'),
+                profile_name=getenv().get('AWS_PROFILE_NAME')
             )
             s3 = session.client('s3')
             s3.upload_fileobj(memfile, bucket_name, file_key)

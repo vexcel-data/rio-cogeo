@@ -13,6 +13,7 @@ from rasterio.enums import Resampling
 
 from rio_cogeo.errors import LossyCompression
 from rio_cogeo.utils import get_maximum_overview_level, has_alpha_band, has_mask_band
+from rio_cogeo.writer import write_to_dst
 
 
 def cog_translate(
@@ -146,4 +147,3 @@ def cog_translate(
                                 "Writing output to: {}".format(dst_path), err=True
                             )
                         write_to_dst(mem, memfile, dst_path, dst_kwargs)
-
