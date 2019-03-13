@@ -1,20 +1,20 @@
 import os
 import boto3
+from enum import Enum
 from rasterio.env import getenv
 from rasterio.shutil import copy
 
 
-SCHEMES = {
-    's3': {
+class Schemes(Enum):
+    s3 = {
         's3:': 2,
         'vsis3': 2,
         's3.amazonaws.com': 3
     }
-}
 
 
 def write_to_dst(mem, memfile, dst_path, dst_kwargs):
-    for k, v in SCHEMES['s3'].items():
+    for k, v in Schemes.s3.value.items():
         if k in dst_path.split('/')[:v]:
             file_key = '/'.join(dst_path.split('/')[v + 1:])
             bucket_name = dst_path.split('/')[v]
