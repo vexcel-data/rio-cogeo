@@ -5,6 +5,9 @@ from rasterio.env import getenv
 from rasterio.shutil import copy
 
 
+DELIMITER: 'str' = '/'
+
+
 class Schemes(Enum):
     s3 = {
         's3:': 2,
@@ -15,9 +18,9 @@ class Schemes(Enum):
 
 def write_to_dst(mem, memfile, dst_path, dst_kwargs):
     for k, v in Schemes.s3.value.items():
-        if k in dst_path.split('/')[:v]:
-            file_key = '/'.join(dst_path.split('/')[v + 1:])
-            bucket_name = dst_path.split('/')[v]
+        if k in dst_path.split(DELIMITER)[:v]:
+            file_key = DELIMITER.join(dst_path.split(DELIMITER)[v + 1:])
+            bucket_name = dst_path.split(DELIMITER)[v]
 
             AWS_ACCESS_KEY_ID: 'str' = os.environ.get(
                 'AWS_ACCESS_KEY_ID_OUT',
