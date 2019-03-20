@@ -1,14 +1,13 @@
 """Rio_cogeo.scripts.cli."""
 
 import os
-
 import click
 import numpy
 
 from rasterio.rio import options
 from rasterio.enums import Resampling
 
-from rio_cogeo.cogeo import cog_translate
+from rio_cogeo.cogeo import cog_translate, cog_validate
 from rio_cogeo.profiles import cog_profiles
 
 
@@ -134,3 +133,13 @@ def cogeo(
         config,
         quiet,
     )
+
+
+@click.command()
+@options.file_in_arg
+def validate(input):
+    """Validate Cloud Optimized Geotiff."""
+    if cog_validate(input):
+        click.echo("{} is a valid cloud optimized GeoTIFF".format(input))
+    else:
+        click.echo("{} is NOT a valid cloud optimized GeoTIFF".format(input))

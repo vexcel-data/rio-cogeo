@@ -54,6 +54,19 @@ Usage
     -q, --quiet                     Suppress progress bar and other non-error output.
     --help                          Show this message and exit.
 
+- Check if a Cloud Optimized Geotiff is valid.
+
+.. code-block::
+
+  $ rio validate --help
+  Usage: rio validate [OPTIONS] INPUT
+
+    Validate Cloud Optimized Geotiff.
+
+  Options:
+    --help  Show this message and exit.
+
+
 Examples
 ========
 
@@ -67,6 +80,9 @@ Examples
 
   # Create a COGEO without compression and with 1024x1024 block size
   $ rio cogeo mydataset.tif mydataset_raw.tif --co BLOCKXSIZE=1024 --co BLOCKYSIZE=1024 --cog-profile raw
+
+  # Check if mydataset_ycbcr.tif is a valid COGEO
+  $ rio cogeo validate mydataset_ycbcr.tif
 
 Default COGEO profiles
 ======================
@@ -127,7 +143,7 @@ Default profiles are tiled with 512x512 blocksizes.
 Overview levels
 ===============
 
-By default rio cogeo will calculate the optimal overview level based on dataset size and internal tile size 
+By default rio cogeo will calculate the optimal overview level based on dataset size and internal tile size
 (overview should not be smaller than internal tile size (e.g 512px). Overview level will be translated to decimation level of power of two.
 
 Internal tile size
@@ -135,23 +151,23 @@ Internal tile size
 
 By default rio cogeo will create a dataset with 512x512 internal tile size. This can be updated by passing `--co BLOCKXSIZE=64 --co BLOCKYSIZE=64` options.
 
-**Web tiling optimization** 
+**Web tiling optimization**
 
-if the input dataset is aligned to web mercator grid, the internal tile size should be equal to the web map tile size (256 or 512px) 
-output dataset is compressed, 
+if the input dataset is aligned to web mercator grid, the internal tile size should be equal to the web map tile size (256 or 512px)
+output dataset is compressed,
 
-if the input dataset is not aligned to web mercator grid, the tiler will need to fetch multiple internal tiles. 
-Because GDAL can merge range request, using small internal tiles (e.g 128) will reduce the number of byte transfered and minimized the useless bytes transfered. 
+if the input dataset is not aligned to web mercator grid, the tiler will need to fetch multiple internal tiles.
+Because GDAL can merge range request, using small internal tiles (e.g 128) will reduce the number of byte transfered and minimized the useless bytes transfered.
 
 Nodata, Alpha and Mask
 ======================
 
-By default rio-cogeo will forward any nodata value or alpha channel to the output COG. 
+By default rio-cogeo will forward any nodata value or alpha channel to the output COG.
 
 If your dataset type is **Byte** or **Unit16**, you could use internal bit mask (with the `--add-mask` option)
 to replace the Nodata value or Alpha band in output dataset (supported by most GDAL based backends).
 
-Note: when adding a `mask` with an input dataset having an alpha band you'll 
+Note: when adding a `mask` with an input dataset having an alpha band you'll
 need to use the `bidx` options to remove it from the output dataset.
 
 .. code-block:: console
@@ -159,9 +175,9 @@ need to use the `bidx` options to remove it from the output dataset.
   # Replace the alpha band by an internal mask
   $ rio cogeo mydataset_withalpha.tif mydataset_withmask.tif --cog-profile raw --add-mask --bidx 1,2,3
 
-**Important** 
+**Important**
 
-Using internal nodata value with lossy compression (`webp`, `jpeg`) is not recommanded. 
+Using internal nodata value with lossy compression (`webp`, `jpeg`) is not recommanded.
 Please use internal masking (or alpha band if using webp)
 
 
